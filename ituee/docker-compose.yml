@@ -1,0 +1,59 @@
+version: '3.4'
+
+services:
+
+  ituee:
+    image: goapi
+    build:
+      context: .
+      dockerfile: ./go-api/Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - go_server_data:/usr/src/ituee/uploads
+    networks:
+      - ituee
+    # environment:
+    #   ENVIRONMENT: 'production'
+    #   PATH_UPLOADS: '/usr/src/ituee/uploads'
+      
+
+
+  database:
+    image: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: 'db_ituee332211'
+    networks:
+      - pgsite
+
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    restart: always
+    hostname: postgres
+    ports:
+      - '5050:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'postgres@domain.com'
+      PGADMIN_DEFAULT_PASSWORD: 'ituee332211'
+    networks:
+      - pgsite
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+
+
+
+networks:
+  pgsite:  # name network
+  ituee:
+
+volumes:
+  db_data:  # name volume
+  pgadmin-data:
+  go_server_data:

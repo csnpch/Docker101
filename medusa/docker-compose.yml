@@ -1,0 +1,39 @@
+# version of compose file
+version: '3'
+
+
+services:
+  # Database
+  db:
+    image: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always   # if got some problem this restart automatic always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: db_csnp332211
+    networks:
+      - pgsite
+
+
+  # pgAdmin4
+  pg4:
+    depends_on:
+      - db   # on line 7
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'postgres@domain.com'
+      PGADMIN_DEFAULT_PASSWORD: 'pgadmin_csnp332211'
+    networks:
+      - pgsite
+
+
+networks:
+  pgsite:   # name network
+
+volumes:
+  db_data:
